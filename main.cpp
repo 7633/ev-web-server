@@ -16,27 +16,27 @@ int main(int argc, char* argv[]) {
     http_server hs(ip, port, dir);
     hs.start();
 
-    pid_t process_id = 0;
-    pid_t sid = 0;
-
-    process_id = fork();
-    if (process_id > 0)
-    {
-        //printf("process_id of child process %d \n", process_id);
-        exit(1);
-    }
-
-    umask(0);
-
-    sid = setsid();
-    if(sid < 0)
-    {
-        exit(1);
-    }
-    chdir("/");
-    close(STDIN_FILENO);
-    close(STDOUT_FILENO);
-    close(STDERR_FILENO);
+//    pid_t process_id = 0;
+//    pid_t sid = 0;
+//
+//    process_id = fork();
+//    if (process_id > 0)
+//    {
+//        //printf("process_id of child process %d \n", process_id);
+//        exit(1);
+//    }
+//
+//    umask(0);
+//
+//    sid = setsid();
+//    if(sid < 0)
+//    {
+//        exit(1);
+//    }
+//    chdir("/");
+//    close(STDIN_FILENO);
+//    close(STDOUT_FILENO);
+//    close(STDERR_FILENO);
 
     return 0;
 }
