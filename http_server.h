@@ -23,7 +23,6 @@ private:
     in_addr_t ip;
     uint port;
 
-
     // Request handler
     void handle_http();
 
