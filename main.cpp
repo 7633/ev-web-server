@@ -12,6 +12,10 @@ int main(int argc, char* argv[]) {
 
     parse_cmd(argc, argv, ip, port, dir);
 
+
+    http_server hs(ip, port, dir);
+    hs.start();
+
     pid_t process_id = 0;
     pid_t sid = 0;
 
@@ -33,9 +37,6 @@ int main(int argc, char* argv[]) {
     close(STDIN_FILENO);
     close(STDOUT_FILENO);
     close(STDERR_FILENO);
-
-    http_server hs(ip, port, dir);
-    hs.start();
 
     return 0;
 }
