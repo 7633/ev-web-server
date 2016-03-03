@@ -24,10 +24,8 @@ char* url;
 string dir;
 
 string resp_ok = "HTTP/1.0 200 OK\r\n"
-        "Content-length: %d\r\n"
-        "Content-Type: text/html\r\n"
-        "\r\n"
-        "\r\n";
+                "Content-length: %d\r\n";
+
 string not_found = "HTTP/1.0 404 NOT FOUND\r\nContent-Type: text/html\r\n\r\n";
 
 //#define handler_error(en, msg) \
@@ -53,16 +51,22 @@ void request_h(string req) {
 
 void response_h(string url, char* buffer){
     string file_name = dir + url;
-    ifstream file(file_name, ios_base::in);
+    ifstream file(file_name, ios_base::in | ios::binary);
     if(file){
         string temp;
         strcat(buffer, resp_ok.c_str());
+        file.seekg(0, ios::end);
+        int length = file.tellg();
+        strcat(buffer, (char*)length);
+        strcat(buffer, "Content-Type: text/html\r\n\r\n");
         while(getline(file, temp)){
             strcat(buffer, temp.c_str());
         }
         strcat(buffer, "\r\n");
     }else{
         strcat(buffer, not_found.c_str());
+        strcpy(buffer, "<html>\n<head>\n<title>Not Found</title>\n</head>\r\n");
+        strcpy(buffer, "<body>\n<p>404 Request file not found.</p>\n</body>\n</html>\r\n");
     }
 
 }
@@ -75,6 +79,8 @@ static void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
     if(r < 0) {
         memset(&buffer, 0, sizeof(buffer));
         strcat(buffer, not_found.c_str());
+        strcpy(buffer, "<html>\n<head>\n<title>Not Found</title>\n</head>\r\n");
+        strcpy(buffer, "<body>\n<p>404 Request file not found.</p>\n</body>\n</html>\r\n");
         send(watcher->fd, buffer, r, MSG_NOSIGNAL);
         return;
     } else if(r == 0) {
