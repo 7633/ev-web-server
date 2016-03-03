@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     process_id = fork();
     if (process_id > 0)
     {
-        printf("process_id of child process %d \n", process_id);
+        //printf("process_id of child process %d \n", process_id);
         exit(0);
     }
 
