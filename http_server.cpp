@@ -27,11 +27,11 @@ string resp_ok = "HTTP/1.0 200 OK\r\n"
 
 string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
                     "Content-length: 0\r\n"
-                    "Content-Type: text/html\r\n\r\n"
-                        "<html>\n"
+                    "Content-Type: text/html\r\n\r\n";
+                        /*"<html>\n"
                         "<head>\n<title>Not Found</title>\n</head>\r\n"
                         "<body>\n<p>404 Request file not found.</p>\n</body>\n"
-                        "</html>\r\n";
+                        "</html>\r\n";*/
 
 //#define handler_error(en, msg) \
 //	do { errno = en; perror(msg); exit(EXIT_FAILURE); } while(0)
@@ -57,6 +57,7 @@ void request_h(string req) {
 void response_h(string url, char* buffer){
     string file_name = dir + url;
     ifstream file(file_name, ios_base::in | ios::binary);
+    ofstream log("/home/rostislav/log_web.txt", ios_base::out | ios_base::app);
     if(file){
         string line;
         string text_file;
@@ -71,9 +72,13 @@ void response_h(string url, char* buffer){
         strcat(buffer, resp_length.c_str());
         strcat(buffer, "\r\nContent-Type: text/html\r\n\r\n");
         strcat(buffer, text_file.c_str());
-        strcat(buffer, "\r\n");
+        strcat(buffer, "\r\n\r\n");
+        log << "[OK]" << buffer <<
+                "------------------------------------------" << endl;
     }else{
         strcat(buffer, resp_notfound.c_str());
+        log << "[404]" << buffer <<
+                "------------------------------------------" << endl;
     }
 
 }
