@@ -23,11 +23,12 @@ char* url;
 string dir;
 
 string resp_ok = "HTTP/1.0 200 OK\r\n"
-                 "Content-length: ";
+                 "Content-Length: ";
 
 string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
-                    "Content-length: 0\r\n"
-                    "Content-Type: text/html\r\n\r\n";
+                    "Content-Length: 0\r\n"
+                    "Content-Type: text/html; charset=utf-8\r\n"
+                    "Connection: close\r\n\r\n";
                         /*"<html>\n"
                         "<head>\n<title>Not Found</title>\n</head>\r\n"
                         "<body>\n<p>404 Request file not found.</p>\n</body>\n"
@@ -70,9 +71,9 @@ void response_h(string url, char* buffer){
 
         strcat(buffer, resp_ok.c_str());
         strcat(buffer, resp_length.c_str());
-        strcat(buffer, "\r\nContent-Type: text/html\r\n\r\n");
+        strcat(buffer, "\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
         strcat(buffer, text_file.c_str());
-        strcat(buffer, "\r\n\r\n");
+        strcat(buffer, "\r\nConnection: close\r\n\r\n");
         log << "[OK]" << buffer <<
                 "------------------------------------------" << endl;
     }else{
