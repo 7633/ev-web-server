@@ -22,11 +22,16 @@ char* url;
 
 string dir;
 
-string resp_ok = "HTTP/1.0 200 OK\r\nContent-length:";
+string resp_ok = "HTTP/1.0 200 OK\r\n"
+                 "Content-length: ";
 
-string not_found = "<html>\n<head>\n<title>Not Found</title>\n</head>\r\n<body>\n<p>404 Request file not found.</p>\n</body>\n</html>\r\n";
-string nf_length = to_string(not_found.length());
-string request_header = "HTTP/1.0 404 NOT FOUND\r\nContent-length:";
+string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
+                    "Content-length: 0\r\n"
+                    "Content-Type: text/html\r\n\r\n"
+                        "<html>\n"
+                        "<head>\n<title>Not Found</title>\n</head>\r\n"
+                        "<body>\n<p>404 Request file not found.</p>\n</body>\n"
+                        "</html>\r\n";
 
 //#define handler_error(en, msg) \
 //	do { errno = en; perror(msg); exit(EXIT_FAILURE); } while(0)
@@ -68,10 +73,7 @@ void response_h(string url, char* buffer){
         strcat(buffer, text_file.c_str());
         strcat(buffer, "\r\n");
     }else{
-        strcat(buffer, request_header.c_str());
-        strcat(buffer, nf_length.c_str());
-        strcat(buffer, "Content-Type: text/html\r\n\r\n");
-        strcat(buffer, not_found.c_str());
+        strcat(buffer, resp_notfound.c_str());
     }
 
 }
@@ -83,10 +85,7 @@ static void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
     ssize_t r = recv(watcher->fd, buffer, 1024, MSG_NOSIGNAL);
     if(r < 0) {
         memset(&buffer, 0, sizeof(buffer));
-        strcat(buffer, request_header.c_str());
-        strcat(buffer, nf_length.c_str());
-        strcat(buffer, "Content-Type: text/html\r\n\r\n");
-        strcat(buffer, not_found.c_str());
+        strcat(buffer, resp_notfound.c_str());
         send(watcher->fd, buffer, strlen(buffer), MSG_NOSIGNAL);
         shutdown(watcher->fd, 0);
         return;
