@@ -39,19 +39,19 @@ string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
 
 int on_url(http_parser* _, const char* at, size_t length) {
     (void)_;
-    //printf("Url: %.*s\n", (int)length, at);
     char* temp_url = (char*)malloc(length*sizeof(char));
     sscanf(at, "%s", temp_url);
     url = temp_url;
-    int pos = url.find('?');
     ofstream debug("/tmp/debug.txt", ios_base::out);
-    debug << temp_url << endl;
+    debug << at << endl << endl;
+    debug << url << endl;
 
+    int pos = url.find('?');
     if(pos > 0){
         url.resize(pos);
     }
 
-    debug << endl << "[realloc url]: " << url << endl;
+    debug << endl << "[url]: " << url << endl;
     debug.close();
     return 0;
 }
@@ -71,8 +71,9 @@ void response_h(string url_name, char* buffer){
     file_name.append(dir);
     file_name.append(url_name);
     ifstream file(file_name, ios_base::in | ios::binary);
-    ofstream log("/tmp/log_web.txt", ios_base::out | ios_base::app);
-    log << endl << "filename: " << file_name << endl;
+    //ofstream log("/tmp/log_web.txt", ios_base::out | ios_base::app);
+    //ofstream log("/tmp/log_web.txt", ios_base::out | ios_base::app);
+    //log << endl << "filename: " << file_name << endl;
     if(file){
         string line;
         string text_file;
@@ -89,15 +90,13 @@ void response_h(string url_name, char* buffer){
         strcat(buffer, "\r\nConnection: close\r\n\r\n");
         strcat(buffer, text_file.c_str());
         strcat(buffer, "\r\n\r\n");
-        log << "[OK]" << buffer <<
-                "------------------------------------------" << endl;
+        //log << "[OK]" << buffer << "------------------------------------------" << endl;
     }else{
         strcat(buffer, resp_notfound.c_str());
-        log << "[404]" << buffer <<
-                "------------------------------------------" << endl;
+        //log << "[404]" << buffer << "------------------------------------------" << endl;
     }
     file.close();
-    log.close();
+    //log.close();
 }
 
 // BEGIN Event loop callbacks
