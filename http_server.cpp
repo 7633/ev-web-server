@@ -43,8 +43,10 @@ int on_url(http_parser* _, const char* at, size_t length) {
     sscanf(at, "%s", temp_url);
     url = temp_url;
     ofstream debug("/tmp/debug.txt", ios_base::out | ios_base::app);
-    debug << at << endl << endl;
-    debug << url << endl;
+    debug << "----------------" << endl
+          << at << endl
+          << "----------------" << endl;
+    debug << "[raw url]: " << url << endl;
 
     int pos = url.find('?');
     if(pos > 0){
