@@ -27,7 +27,7 @@ string resp_ok = "HTTP/1.0 200 OK\r\n"
 
 string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
                     "Content-Length: 0\r\n"
-                    "Content-Type: text/html; charset=utf-8\r\n"
+                    "Content-Type: text/html\r\n"
                     "Connection: close\r\n\r\n";
                         /*"<html>\n"
                         "<head>\n<title>Not Found</title>\n</head>\r\n"
