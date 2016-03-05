@@ -41,6 +41,7 @@ int on_url(http_parser* _, const char* at, size_t length) {
     (void)_;
     char* temp_url = (char*)malloc(length*sizeof(char));
     sscanf(at, "%s", temp_url);
+    url.clear();
     url = temp_url;
     ofstream debug("/tmp/debug.txt", ios_base::out | ios_base::app);
     debug << "----------------" << endl
