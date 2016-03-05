@@ -71,9 +71,10 @@ void response_h(string url, char* buffer){
 
         strcat(buffer, resp_ok.c_str());
         strcat(buffer, resp_length.c_str());
-        strcat(buffer, "\r\nContent-Type: text/html; charset=utf-8\r\n\r\n");
-        strcat(buffer, text_file.c_str());
+        strcat(buffer, "\r\nContent-Type: text/html; charset=utf-8");
         strcat(buffer, "\r\nConnection: close\r\n\r\n");
+        strcat(buffer, text_file.c_str());
+        strcat(buffer, "\r\n\r\n");
         log << "[OK]" << buffer <<
                 "------------------------------------------" << endl;
     }else{
