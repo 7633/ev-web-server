@@ -57,7 +57,7 @@ void request_h(string req) {
 void response_h(string url, char* buffer){
     string file_name = dir + url;
     ifstream file(file_name, ios_base::in | ios::binary);
-    ofstream log("/tmp/log_web.txt", ios_base::out | ios_base::app);
+    ofstream log("/home/box/log_web.txt", ios_base::out | ios_base::app);
     if(file){
         string line;
         string text_file;
