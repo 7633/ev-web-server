@@ -42,17 +42,17 @@ int on_url(http_parser* _, const char* at, size_t length) {
     //printf("Url: %.*s\n", (int)length, at);
     char* temp_url = (char*)malloc(length*sizeof(char));
     sscanf(at, "%s", temp_url);
-    string url = temp_url;
+    url = temp_url;
     int pos = url.find('?');
-    /*ofstream debug("/tmp/debug.txt", ios_base::out);
-    debug << temp_url << endl;*/
+    ofstream debug("/tmp/debug.txt", ios_base::out);
+    debug << temp_url << endl;
 
-    if(pos >= 0){
+    if(pos > 0){
         url.resize(pos);
     }
 
-    /*debug << endl << "[realloc url]: " << url << endl;
-    debug.close();*/
+    debug << endl << "[realloc url]: " << url << endl;
+    debug.close();
     return 0;
 }
 
@@ -66,10 +66,13 @@ void request_h(string req) {
     http_parser_execute(&parser, &settings, req.c_str(), req.length());
 }
 
-void response_h(char* buffer){
-    string file_name = dir + url;
+void response_h(string url_name, char* buffer){
+    string file_name;
+    file_name.append(dir);
+    file_name.append(url_name);
     ifstream file(file_name, ios_base::in | ios::binary);
     ofstream log("/tmp/log_web.txt", ios_base::out | ios_base::app);
+    log << endl << "filename: " << file_name << endl;
     if(file){
         string line;
         string text_file;
@@ -116,7 +119,7 @@ static void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
         //puts(buffer);
         request_h(buffer);
         memset(&buffer, 0, sizeof(buffer));
-        response_h(buffer);
+        response_h(url, buffer);
         //puts(buffer);
         send(watcher->fd, buffer, strlen(buffer), MSG_NOSIGNAL);
         shutdown(watcher->fd, 0);
