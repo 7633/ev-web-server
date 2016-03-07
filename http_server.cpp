@@ -22,10 +22,9 @@ string url;
 
 string dir;
 
-string resp_ok = "HTTP/1.0 200 OK\r\n"
-                 "Content-Length: ";
+char resp_ok[] = "HTTP/1.0 200 OK\r\nContent-Length: ";
 
-string resp_notfound = "HTTP/1.0 404 NOT FOUND\r\n"
+char resp_notfound[] = "HTTP/1.0 404 NOT FOUND\r\n"
                     "Content-Length: 0\r\n"
                     "Content-Type: text/html\r\n"
                     "Connection: close\r\n\r\n";
@@ -87,7 +86,7 @@ void response_h(string url_name, char* buffer){
 
         string resp_length = to_string(text_file.length());
 
-        strcat(buffer, resp_ok.c_str());
+        strcat(buffer, resp_ok);
         strcat(buffer, resp_length.c_str());
         strcat(buffer, "\r\nContent-Type: text/html; charset=utf-8");
         strcat(buffer, "\r\nConnection: close\r\n\r\n");
@@ -95,7 +94,7 @@ void response_h(string url_name, char* buffer){
         strcat(buffer, "\r\n\r\n");
         //log << "[OK]" << buffer << "------------------------------------------" << endl;
     }else{
-        strcat(buffer, resp_notfound.c_str());
+        strcat(buffer, resp_notfound);
         //log << "[404]" << buffer << "------------------------------------------" << endl;
     }
     file.close();
@@ -109,7 +108,7 @@ static void read_cb(struct ev_loop *loop, struct ev_io *watcher, int revents) {
     ssize_t r = recv(watcher->fd, buffer, 1024, MSG_NOSIGNAL);
     if(r < 0) {
         memset(&buffer, 0, sizeof(buffer));
-        strcat(buffer, resp_notfound.c_str());
+        strcat(buffer, resp_notfound);
         send(watcher->fd, buffer, strlen(buffer), MSG_NOSIGNAL);
         shutdown(watcher->fd, 0);
         return;
